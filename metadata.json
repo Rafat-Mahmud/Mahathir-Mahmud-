@@ -1,0 +1,6 @@
+{
+  "name": "Margin Notes",
+  "description": "Turn any class, slide deck, PDF, or lecture transcript into a complete, beautifully structured study note with diagrams, flowcharts, tables, and study extras.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

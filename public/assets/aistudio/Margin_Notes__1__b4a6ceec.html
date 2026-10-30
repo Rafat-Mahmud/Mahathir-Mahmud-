@@ -1,0 +1,1143 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Margin Notes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Layout: slim top bar; one calm centred column for the 3 steps; note view is a toolbar over a full-width paper preview. */
+:root{
+  --bg:#f7f6f2; --surface:#ffffff; --ink:#15182b; --muted:#666b80; --line:#e3e1d8; --soft:#f0eee7;
+  --acc:#2f4fd8; --acc-ink:#ffffff; --acc-soft:#e8edff; --hi:#ffd447; --ok:#17996f; --bad:#c42a4d;
+  --disp:'Fraunces',Georgia,serif; --sans:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif; --script:'Caveat',cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#111322;--surface:#191c33;--ink:#f0eee8;--muted:#9fa3bd;--line:#2c3052;--soft:#20243f;--acc:#7f98ff;--acc-ink:#0d1020;--acc-soft:#252c57;--hi:#e8bd2f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111322;--surface:#191c33;--ink:#f0eee8;--muted:#9fa3bd;--line:#2c3052;--soft:#20243f;--acc:#7f98ff;--acc-ink:#0d1020;--acc-soft:#252c57;--hi:#e8bd2f;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--sans);-webkit-font-smoothing:antialiased;
+  padding-block:0 3rem;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:820px;margin:0 auto}
+.wide{max-width:1180px;margin:0 auto}
+:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+
+/* top bar */
+.top{display:flex;align-items:center;gap:1rem;padding-block:1rem;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:.55rem;font:700 1.35rem/1 var(--disp);letter-spacing:-.01em;border:0;background:none;padding:0}
+.tabs{display:flex;gap:.2rem;margin-inline-start:auto}
+.pill{display:flex;align-items:center;gap:.5rem;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.4rem .8rem;font-size:.82rem;font-weight:600}
+.pill i{width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.pill.ok i{background:var(--ok)}.pill.bad i{background:var(--bad)}
+.sub{color:var(--muted);font-size:.9rem;margin:-.4rem 0 1rem;min-height:1.4em}
+.tab{border:0;background:none;padding:.5rem .9rem;border-radius:999px;color:var(--muted);font-weight:600}
+.tab[aria-selected=true]{background:var(--ink);color:var(--bg)}
+.tab em{font-style:normal;font-size:.75rem;background:var(--hi);color:#15182b;border-radius:999px;padding:.05rem .45rem;margin-inline-start:.3rem}
+
+/* hero */
+.hero{padding:2.2rem 0 1.6rem}
+.eyebrow{margin:0 0 .7rem;font:700 .72rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}
+h1{font:700 clamp(2rem,5vw,3.2rem)/1.08 var(--disp);letter-spacing:-.025em;margin:0;text-wrap:balance}
+h1 mark{background:linear-gradient(transparent 62%,var(--hi) 62% 90%,transparent 90%);color:inherit;padding:0 .06em}
+.note-scribble{font:700 1.5rem/1 var(--script);color:var(--bad);display:inline-block;transform:rotate(-4deg) translateY(-.9rem);margin-inline-start:.5rem}
+.lede{color:var(--muted);max-width:620px;margin:1rem 0 0;font-size:1.05rem}
+
+/* steps */
+.step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1.4rem 1.5rem 1.5rem;margin-bottom:1rem}
+.step h2{display:flex;align-items:center;gap:.7rem;margin:0 0 1rem;font:700 1.15rem/1.2 var(--disp)}
+.step h2 span{flex:none;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 .82rem/1 var(--sans)}
+.lab{display:block;font-weight:600;font-size:.82rem;margin:0 0 .35rem}
+.lab em{font-style:normal;color:var(--muted);font-weight:500}
+.hint{color:var(--muted);font-size:.84rem;margin:.45rem 0 0}
+input[type=text],input[type=url],select,textarea{width:100%;padding:.7rem .85rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+.field{display:block;margin-top:1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+
+.drop{display:grid;justify-items:center;gap:.3rem;text-align:center;padding:1.6rem 1rem;border:1.5px dashed var(--muted);border-radius:14px;cursor:pointer;background:var(--bg);transition:background .15s,border-color .15s}
+.drop:hover,.drop.over{border-color:var(--acc);background:var(--acc-soft)}
+.drop b{font-size:1rem}.drop small{color:var(--muted)}
+.files{list-style:none;padding:0;margin:.8rem 0 0;display:grid;gap:.45rem}
+.files li{display:flex;align-items:center;gap:.7rem;padding:.55rem .75rem;border:1px solid var(--line);border-radius:10px;background:var(--bg);min-width:0}
+.files .ext{flex:none;width:2.1rem;height:2.1rem;border-radius:8px;background:var(--hi);color:#15182b;display:grid;place-items:center;font:800 .6rem/1 var(--sans)}
+.files .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;font-size:.9rem}
+.files .sz{color:var(--muted);font-size:.78rem}
+.files button{border:0;background:none;font-size:1.2rem;line-height:1;color:var(--muted)}
+.files button:hover{color:var(--bad)}
+.sep{display:flex;align-items:center;gap:.8rem;margin:1.1rem 0 0;color:var(--muted);font:700 1.15rem var(--script)}
+.sep:before,.sep:after{content:"";flex:1;border-top:1px dashed var(--line)}
+details.how{margin-top:.6rem;font-size:.88rem;color:var(--muted)}
+details.how summary{cursor:pointer;color:var(--acc);font-weight:600}
+details.how ol{margin:.5rem 0 0;padding-inline-start:1.2rem}
+
+.styles{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media(max-width:560px){.styles{grid-template-columns:1fr}}
+.opt{position:relative;display:block}
+.opt input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.card{border:1px solid var(--line);border-radius:14px;padding:.8rem;background:var(--bg);display:grid;gap:.25rem;height:100%}
+.card strong{font-size:.95rem}.card span{color:var(--muted);font-size:.8rem;line-height:1.35}
+.opt input:checked+.card{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.opt input:focus-visible+.card{outline:3px solid var(--hi)}
+.mini{height:84px;border-radius:8px;padding:.6rem .7rem;display:grid;align-content:start;gap:.35rem;margin-bottom:.25rem;overflow:hidden}
+.mini b{font-size:.78rem}.mini i{display:block;height:6px;border-radius:3px;background:#d9dce8}.mini i.s{width:55%}
+.mini.doc{background:#fff;color:#1f3864;border:1px solid #d8dce8}.mini.doc b{font-family:Calibri,Carlito,sans-serif;border-bottom:2px solid #2f5496;padding-bottom:.25rem}
+.mini.doc i{background:#e9effa;border-left:3px solid #2f5496}
+.mini.hand{background:#fffdf4 radial-gradient(circle,#bfc7de 1px,transparent 1.2px) 0 0/11px 11px;border:1px solid #cfc7b3;color:#3730a3}
+.mini.hand b{font:700 1.2rem/1 var(--script);background:linear-gradient(transparent 62%,#ffd447 62%);justify-self:start;padding:0 .2em}
+.mini.hand i{background:#ffe45c;border-radius:2px 7px 3px 7px}.mini.hand i+i{background:#a8dcf7}
+.sws{display:flex;gap:.55rem;flex-wrap:wrap;padding-top:.3rem}
+.sw{width:28px;height:28px;border-radius:50%;background:var(--c);border:2.5px solid var(--surface);box-shadow:0 0 0 1px var(--line);padding:0}
+.sw[aria-pressed=true]{box-shadow:0 0 0 2px var(--ink)}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+@media(max-width:620px){.toggles{grid-template-columns:1fr}}
+.tg{display:flex;gap:.65rem;align-items:flex-start;padding:.7rem .8rem;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer}
+.tg:has(input:checked){border-color:var(--acc);background:var(--acc-soft)}
+.tg input{margin-top:.2rem;width:17px;height:17px;accent-color:var(--acc);flex:none}
+.tg b{display:block;font-size:.9rem}.tg small{display:block;color:var(--muted);font-size:.78rem;line-height:1.35}
+
+.go{display:inline-flex;align-items:center;gap:.6rem;background:var(--acc);color:var(--acc-ink);border:0;border-radius:12px;padding:.9rem 1.4rem;font:700 1.05rem var(--sans);transition:transform .12s,filter .12s}
+.go:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.go:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.ghost{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.55rem .9rem;font-weight:600;font-size:.88rem;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
+.ghost:hover{border-color:var(--acc)}
+.err{color:var(--bad);font-weight:600;margin:.8rem 0 0}
+
+/* run view */
+.run{padding:2.4rem 0}
+.run h1{font-size:clamp(1.7rem,4vw,2.4rem);margin-bottom:1.2rem}
+.bar{height:10px;border-radius:999px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;width:2%;background:var(--acc);border-radius:999px;transition:width .5s}
+.pct{font:700 1.3rem var(--script);color:var(--bad);margin:.5rem 0 1rem}
+.stages{list-style:none;margin:0 0 1.2rem;padding:0;display:grid;gap:.5rem}
+.stages li{display:flex;gap:.7rem;align-items:center;color:var(--muted);font-weight:600}
+.stages i{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.65rem;font-style:normal}
+.stages li.on{color:var(--ink)}.stages li.on i{border-color:var(--acc);background:var(--acc-soft)}
+.stages li.done{color:var(--ink)}.stages li.done i{background:var(--ok);border-color:var(--ok);color:#fff}.stages li.done i:after{content:"✓"}
+.log{background:var(--soft);border-radius:12px;padding:.9rem 1rem;font:12.5px/1.6 ui-monospace,Menlo,Consolas,monospace;max-height:220px;overflow:auto;white-space:pre-wrap;margin:0;color:var(--muted)}
+.box-err{border:1px solid var(--bad);background:var(--surface);border-radius:12px;padding:1rem 1.2rem;margin-top:1rem}
+.acts{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+
+/* note view */
+.nbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;padding:.6rem .8rem;margin-top:.4rem;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.nbar .nt{font-weight:700;min-width:0;max-width:30ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seg{display:inline-flex;background:var(--soft);border-radius:999px;padding:3px}
+.seg button{border:0;background:none;padding:.4rem .8rem;border-radius:999px;font-size:.85rem;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.sp{flex:1}
+#frame{display:block;width:100%;height:calc(100vh - 8rem);min-height:520px;border:1px solid var(--line);border-radius:14px;margin-top:.8rem;background:#e4e7ee}
+.status{font-size:.85rem;color:var(--muted);margin:.5rem .2rem 0}
+
+/* library */
+.libh{padding:2rem 0 1rem}
+.lib{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.nc{display:flex;flex-direction:column;gap:.5rem;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;min-width:0}
+.nc .tag{align-self:flex-start;font:700 .66rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;background:var(--hi);color:#15182b;border-radius:6px;padding:.3rem .5rem}
+.nc h3{margin:0;font:700 1.1rem/1.25 var(--disp);overflow-wrap:anywhere}
+.nc .m{color:var(--muted);font-size:.82rem}
+.nc .b{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem}
+.empty{color:var(--muted);text-align:center;padding:3rem 0;font:700 1.3rem var(--script)}
+.toast{position:fixed;left:50%;bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.7rem 1.1rem;border-radius:12px;font-weight:600;z-index:60;max-width:90vw}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wide">
+<header class="top">
+  <button class="logo" id="home" aria-label="Margin home">
+    <svg viewBox="0 0 40 40" width="32" height="32" aria-hidden="true"><rect x="2" y="2" width="36" height="36" rx="11" fill="#15182b"/><path d="M12 28V12l8 10 8-10v16" fill="none" stroke="#ffd447" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="31" cy="9" r="3" fill="#ff5a3c"/></svg>
+    Margin
+  </button>
+  <nav class="tabs" role="tablist">
+    <button class="tab" id="tab-create" role="tab" aria-selected="true">Create</button>
+    <button class="tab" id="tab-lib" role="tab" aria-selected="false">Library <em id="libn">0</em></button>
+  </nav>
+  <button class="pill" id="pill" type="button" title="Check that Claude is connected"><i></i><span>Checking…</span></button>
+</header>
+
+<!-- ============ CREATE ============ -->
+<section id="v-create">
+  <div class="wrap">
+    <div class="hero">
+      <p class="eyebrow">Notes for students</p>
+      <h1>Turn any class into a <mark>complete</mark> note<span class="note-scribble">nothing missed</span></h1>
+      <p class="lede">Add slides, PDFs, photos or a class transcript. Margin reads every page, writes one organised document with tables, flowcharts and diagrams, checks that nothing is left out, and gives you a PDF.</p>
+    </div>
+
+    <form id="form" autocomplete="off">
+      <section class="step">
+        <h2><span>1</span>Your material</h2>
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose files">
+          <input id="file" type="file" multiple hidden accept=".pdf,.pptx,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,application/pdf">
+          <b>Drop files here or browse</b>
+          <small>PDF · PowerPoint · Word · text · photos of notes or whiteboards</small>
+        </div>
+        <ul class="files" id="files"></ul>
+
+        <div class="sep">and / or</div>
+
+        <label class="field" for="link"><span class="lab">Class link <em>(optional)</em></span>
+          <input id="link" type="url" placeholder="https://youtube.com/watch?v=…"></label>
+        <label class="field" for="tx"><span class="lab">Class transcript <em>(what the teacher said)</em></span>
+          <textarea id="tx" placeholder="Paste the transcript of the class here. Margin merges it with your slides."></textarea></label>
+        <p class="hint">This page cannot open links by itself, so the speech comes from the transcript you paste.</p>
+        <details class="how"><summary>How do I get a transcript from a class link?</summary>
+          <ol>
+            <li><b>YouTube:</b> open the video, tap <i>…more</i> under it, choose <i>Show transcript</i>, select all the text and copy it.</li>
+            <li><b>Zoom, Teams, Meet recordings:</b> open the recording page, use <i>Transcript</i> or <i>Captions</i>, then copy or download it.</li>
+            <li>Paste it above. Time stamps are fine and are kept as references in the note.</li>
+          </ol>
+        </details>
+      </section>
+
+      <section class="step">
+        <h2><span>2</span>The look</h2>
+        <div class="styles" role="radiogroup" aria-label="Note style">
+          <label class="opt"><input type="radio" name="style" value="doc" checked><div class="card"><div class="mini doc"><b>1. Photosynthesis</b><i></i><i></i><i class="s"></i></div><strong>Document</strong><span>Looks like a Word file: numbered headings, tables, shaded call-outs.</span></div></label>
+          <label class="opt"><input type="radio" name="style" value="hand"><div class="card"><div class="mini hand"><b>Photosynthesis</b><i></i><i></i><i class="s"></i></div><strong>Handwritten</strong><span>Notebook feel: marker highlights, sticky notes, doodle arrows.</span></div></label>
+        </div>
+        <div class="grid2">
+          <div class="field"><span class="lab">Accent colour</span>
+            <div class="sws" id="sws">
+              <button type="button" class="sw" data-a="blue" style="--c:#2f5496" aria-pressed="true" aria-label="Blue"></button>
+              <button type="button" class="sw" data-a="indigo" style="--c:#4f46e5" aria-pressed="false" aria-label="Indigo"></button>
+              <button type="button" class="sw" data-a="teal" style="--c:#0e8a80" aria-pressed="false" aria-label="Teal"></button>
+              <button type="button" class="sw" data-a="rose" style="--c:#d1304f" aria-pressed="false" aria-label="Rose"></button>
+              <button type="button" class="sw" data-a="amber" style="--c:#b87400" aria-pressed="false" aria-label="Amber"></button>
+              <button type="button" class="sw" data-a="slate" style="--c:#37455c" aria-pressed="false" aria-label="Slate"></button>
+            </div></div>
+          <label class="field" for="lang"><span class="lab">Note language</span>
+            <select id="lang">
+              <option value="en">English</option><option value="bn">বাংলা (Bangla)</option><option value="bn-en">English + বাংলা (bilingual)</option>
+              <option value="hi">हिन्दी (Hindi)</option><option value="ur">اردو (Urdu)</option><option value="ar">العربية (Arabic)</option>
+              <option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="pt">Português</option>
+              <option value="ru">Русский</option><option value="tr">Türkçe</option><option value="id">Bahasa Indonesia</option>
+              <option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="other">Other…</option>
+            </select>
+            <input id="lang-other" type="text" placeholder="Type any language, e.g. Tamil" hidden style="margin-top:.5rem">
+          </label>
+        </div>
+        <p class="hint">You can switch style and colour again inside the finished note.</p>
+      </section>
+
+      <section class="step">
+        <h2><span>3</span>What goes in</h2>
+        <div class="toggles">
+          <label class="tg"><input type="checkbox" id="o-audit" checked><span><b>Completeness check</b><small>A second pass hunts for anything missing and adds it.</small></span></label>
+          <label class="tg"><input type="checkbox" id="o-visuals" checked><span><b>Diagrams, flowcharts, tables</b><small>Drawn by Claude wherever they explain better than words.</small></span></label>
+          <label class="tg"><input type="checkbox" id="o-explain" checked><span><b>Hard-topic explanations</b><small>“Explained simply” boxes with an everyday analogy.</small></span></label>
+          <label class="tg"><input type="checkbox" id="o-examples" checked><span><b>Extra worked examples</b><small>Short examples where the source has none.</small></span></label>
+          <label class="tg"><input type="checkbox" id="o-embed" checked><span><b>Include original pictures</b><small>Puts the real slide, chart or photo into the note where it matters.</small></span></label>
+          <label class="tg"><input type="checkbox" id="o-extras" checked><span><b>Study extras</b><small>Glossary, one-page revision sheet and self-test questions.</small></span></label>
+          <label class="tg"><input type="checkbox" id="o-fast"><span><b>Fast draft</b><small>Uses the quicker model. Good for a first look, a little less detailed.</small></span></label>
+          <label class="tg"><input type="checkbox" id="o-read" checked><span><b>Read slide images</b><small>Looks at every slide picture: diagrams, charts, handwriting.</small></span></label>
+        </div>
+        <div class="grid2">
+          <label class="field" for="title"><span class="lab">Note title <em>(optional)</em></span><input id="title" type="text" placeholder="e.g. Cell Biology, Lecture 5"></label>
+          <label class="field" for="subject"><span class="lab">Subject <em>(optional)</em></span><input id="subject" type="text" placeholder="e.g. Biology" list="subjects"><datalist id="subjects"></datalist></label>
+        </div>
+      </section>
+
+      <button class="go" id="go" type="submit">Create my note →</button>
+      <p class="hint" id="eta">Runs on your own Claude account. A 30-slide deck usually takes 5 to 8 minutes.</p>
+      <p class="err" id="ferr" hidden></p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ RUN ============ -->
+<section id="v-run" hidden>
+  <div class="wrap run">
+    <p class="eyebrow">Working on it</p>
+    <h1 id="rtitle">Reading your material…</h1>
+    <div class="bar"><i id="rfill"></i></div>
+    <p class="pct" id="rpct">0%</p>
+    <p class="sub" id="rsub" aria-live="polite"></p>
+    <ol class="stages" id="stages">
+      <li data-s="read"><i></i>Reading slides and pages</li>
+      <li data-s="write"><i></i>Writing every topic and checking nothing is missing</li>
+      <li data-s="extras"><i></i>Glossary, revision sheet and self-test</li>
+      <li data-s="finish"><i></i>Finishing the document</li>
+    </ol>
+    <pre class="log" id="log"></pre>
+    <div class="acts"><button class="ghost" id="stop" type="button">Stop</button></div>
+    <div class="box-err" id="rerr" hidden><b>Some parts did not finish.</b><p id="rerr-msg"></p>
+      <div class="acts"><button class="go" id="retry" type="button">Retry unfinished parts</button><button class="ghost" id="back" type="button">Back to the form</button></div></div>
+  </div>
+</section>
+
+<!-- ============ NOTE ============ -->
+<section id="v-note" hidden>
+  <div class="nbar">
+    <button class="ghost" id="n-back" type="button">← Library</button>
+    <span class="nt" id="n-title"></span>
+    <span class="sp"></span>
+    <div class="seg" role="group" aria-label="Style"><button id="st-doc" aria-pressed="true">Document</button><button id="st-hand" aria-pressed="false">Handwritten</button></div>
+    <div class="sws" id="nsws" style="padding:0">
+      <button type="button" class="sw" data-a="blue" style="--c:#2f5496" aria-pressed="true" aria-label="Blue"></button>
+      <button type="button" class="sw" data-a="teal" style="--c:#0e8a80" aria-pressed="false" aria-label="Teal"></button>
+      <button type="button" class="sw" data-a="rose" style="--c:#d1304f" aria-pressed="false" aria-label="Rose"></button>
+      <button type="button" class="sw" data-a="amber" style="--c:#b87400" aria-pressed="false" aria-label="Amber"></button>
+      <button type="button" class="sw" data-a="slate" style="--c:#37455c" aria-pressed="false" aria-label="Slate"></button>
+    </div>
+    <button class="ghost" id="zoom-out" type="button" aria-label="Smaller text">A−</button>
+    <button class="ghost" id="zoom-in" type="button" aria-label="Bigger text">A+</button>
+    <button class="go" id="dl-pdf" type="button" style="padding:.55rem 1rem;font-size:.9rem">⬇ Download PDF</button>
+    <button class="ghost" id="dl-html" type="button">⬇ HTML</button>
+  </div>
+  <iframe id="frame" title="Your note" sandbox="allow-same-origin"></iframe>
+  <p class="status" id="nstatus" aria-live="polite"></p>
+</section>
+
+<!-- ============ LIBRARY ============ -->
+<section id="v-lib" hidden>
+  <div class="libh"><h1>My library</h1></div>
+  <div class="lib" id="lib"></div>
+  <p class="empty" id="lib-empty" hidden>No notes yet. Your first one takes a few minutes.</p>
+</section>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script>
+const NOTE_CSS = `
+*{box-sizing:border-box}
+:root{--ink:#1d2233;--muted:#5c6377;--line:#d8dce8;--bg:#e4e7ee;
+ --acc:#2f5496;--acc-soft:#e9effa;--acc-ink:#1f3864;
+ --amber:#c98a00;--amber-soft:#fff5d6;--amber-ink:#7a5200;
+ --teal:#0e8a80;--teal-soft:#dcf5f1;--teal-ink:#0a5a54;
+ --rose:#d1304f;--rose-soft:#ffe6eb;--rose-ink:#8c1330;
+ --violet:#7040d8;--violet-soft:#f0e8ff;--violet-ink:#4a24a0;
+ --sky:#0a7fb8;--sky-soft:#def1fb;--sky-ink:#075680;
+ --green:#178a42;--green-soft:#dff5e6;--green-ink:#0d5a2a;
+ --body:'Carlito','Calibri','Hind Siliguri','Noto Sans Arabic',system-ui,sans-serif;
+ --hand:'Kalam','Atma','Hind Siliguri','Noto Sans Arabic',cursive;
+ --script:'Caveat','Atma','Hind Siliguri',cursive;
+ --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace}
+[data-accent=indigo]{--acc:#4f46e5;--acc-soft:#ebe9fd;--acc-ink:#3730a3}
+[data-accent=teal]{--acc:#0e8a80;--acc-soft:#dcf5f1;--acc-ink:#0a5a54}
+[data-accent=rose]{--acc:#d1304f;--acc-soft:#ffe6eb;--acc-ink:#8c1330}
+[data-accent=amber]{--acc:#b87400;--acc-soft:#fff0cc;--acc-ink:#7a4d00}
+[data-accent=slate]{--acc:#37455c;--acc-soft:#e6eaf1;--acc-ink:#1f2a3b}
+html{font-size:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.62;-webkit-font-smoothing:antialiased}
+.sheet{width:min(794px,calc(100% - 24px));margin:20px auto 40px;background:#fff;padding:60px 68px 72px;box-shadow:0 1px 3px rgba(20,24,50,.12),0 14px 40px -18px rgba(20,24,50,.35);counter-reset:sec}
+@media(max-width:700px){.sheet{padding:28px 20px 40px}}
+
+/* cover */
+.cover{margin-bottom:26px;padding-bottom:16px;border-bottom:3px solid var(--acc)}
+.cover .kicker{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.cover h1{font-size:2.35rem;line-height:1.12;margin:.35rem 0 .6rem;color:var(--acc-ink);letter-spacing:-.01em}
+.meta{display:flex;flex-wrap:wrap;gap:.2rem .9rem;color:var(--muted);font-size:.86rem}
+.meta span+span::before{content:"•";margin-inline-end:.9rem;color:var(--line)}
+.legend{margin-top:14px;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;font-size:.74rem;font-weight:700}
+.legend b{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.66rem;margin-inline-end:.3rem}
+.legend span{padding:.28rem .55rem;border-radius:6px;background:var(--bg-l);border-inline-start:4px solid var(--b-l);color:var(--ink)}
+.l-def{--b-l:var(--acc);--bg-l:var(--acc-soft)}.l-key{--b-l:var(--amber);--bg-l:var(--amber-soft)}.l-ex{--b-l:var(--teal);--bg-l:var(--teal-soft)}
+.l-formula{--b-l:var(--violet);--bg-l:var(--violet-soft)}.l-why{--b-l:var(--sky);--bg-l:var(--sky-soft)}.l-warn{--b-l:var(--rose);--bg-l:var(--rose-soft)}.l-tip{--b-l:var(--green);--bg-l:var(--green-soft)}
+
+/* headings */
+.sheet h2,.sheet h3,.sheet h4{line-height:1.25;margin:0}
+section.topic{margin:34px 0;counter-increment:sec;counter-reset:sub}
+section.topic.addendum,section.topic.extras{counter-increment:none}
+section.topic.addendum{margin:14px 0 0;padding-inline-start:14px;border-inline-start:3px dashed var(--line)}
+.sheet h2{font-size:1.55rem;color:var(--acc-ink);padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.sheet h3{font-size:1.2rem;color:var(--acc);margin:22px 0 6px;counter-increment:sub}
+.sheet h4{font-size:1.02rem;margin:16px 0 4px}
+.sheet p{margin:.5rem 0}
+.sheet ul,.sheet ol{margin:.45rem 0;padding-inline-start:1.35rem}
+.sheet li{margin:.22rem 0}
+.sheet li::marker{color:var(--acc);font-weight:700}
+.sheet code{font-family:var(--mono);font-size:.86em;background:#f0f1f7;border-radius:4px;padding:.08em .35em}
+.sheet small{color:var(--muted)}
+
+/* inline */
+b.term{color:var(--acc-ink);font-weight:700}
+mark.hl,mark.hl2,mark.hl3{color:inherit;border-radius:3px;padding:.02em .2em}
+mark.hl{background:#fff0a3}mark.hl2{background:#ffd2e0}mark.hl3{background:#cdeafb}
+u.ul{text-decoration:underline;text-decoration-color:var(--rose);text-decoration-thickness:2px;text-underline-offset:3px}
+.arr{color:var(--rose);font-weight:800;padding:0 .12em}
+.ts{display:inline-block;font-size:.66rem;font-weight:700;color:var(--muted);background:#eef0f6;border-radius:5px;padding:.15rem .4rem;vertical-align:middle;margin-inline:.2rem}
+
+/* boxes */
+.box{--b:var(--acc);--bg:var(--acc-soft);--bi:var(--acc-ink);margin:16px 0;padding:12px 16px 13px;background:var(--bg);border-inline-start:5px solid var(--b);border-radius:6px;position:relative}
+.box.def{--b:var(--acc);--bg:var(--acc-soft);--bi:var(--acc-ink)}.box.key{--b:var(--amber);--bg:var(--amber-soft);--bi:var(--amber-ink)}
+.box.ex{--b:var(--teal);--bg:var(--teal-soft);--bi:var(--teal-ink)}.box.formula{--b:var(--violet);--bg:var(--violet-soft);--bi:var(--violet-ink)}
+.box.why{--b:var(--sky);--bg:var(--sky-soft);--bi:var(--sky-ink)}.box.warn{--b:var(--rose);--bg:var(--rose-soft);--bi:var(--rose-ink)}
+.box.tip{--b:var(--green);--bg:var(--green-soft);--bi:var(--green-ink)}.box.recap{--b:#1d2233;--bg:#eceef4;--bi:#1d2233}
+.box .label{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--bi);margin-bottom:6px}
+.box>:last-child{margin-bottom:0}.box p:first-of-type{margin-top:.15rem}
+.box.formula p{font-size:1.1rem}
+
+/* blocks */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:20px 0}
+.flow .node{flex:1 1 120px;background:#fff;border:2px solid var(--acc);border-radius:10px;padding:9px 12px;text-align:center;font-weight:700;font-size:.92rem;line-height:1.35}
+.flow .link{align-self:center;color:var(--rose);font-size:1.5rem;font-weight:800;text-align:center;line-height:1;min-width:30px}
+.flow .link small{display:block;font-size:.6rem;line-height:1.1;color:var(--muted);margin-top:2px;font-weight:600}
+.flow.vertical{flex-direction:column;align-items:center}.flow.vertical .node{flex:none;width:min(100%,420px)}.flow.vertical .link{transform:rotate(90deg);min-width:0;margin:5px 0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0}
+.cols .col{background:#fff;border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:8px;padding:10px 14px}
+.cols .col:nth-child(2){border-top-color:var(--teal)}.cols .col:nth-child(3){border-top-color:var(--amber)}
+.timeline{position:relative;margin:20px 0;padding-inline-start:26px;border-inline-start:3px solid var(--acc-soft)}
+.tl-item{position:relative;margin:0 0 14px}
+.tl-item:before{content:"";position:absolute;inset-inline-start:-35px;top:6px;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--acc)}
+.tl-when{display:inline-block;font-size:.78rem;font-weight:800;color:var(--acc-ink);background:var(--acc-soft);padding:.2rem .55rem;border-radius:5px;margin-bottom:3px}
+.aside{margin:16px 0;padding:10px 14px;border:1.5px dashed var(--amber);background:var(--amber-soft);border-radius:8px;font-size:.93rem;color:var(--amber-ink)}
+details.qa{margin:8px 0;border:1px solid var(--line);border-radius:8px;background:#fff;overflow:hidden}
+details.qa summary{cursor:pointer;padding:10px 14px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:baseline}
+details.qa summary::before{content:"Q";flex:none;font-size:.7rem;font-weight:800;background:var(--acc);color:#fff;border-radius:5px;padding:.2rem .4rem}
+details.qa[open] summary{background:var(--acc-soft)}
+details.qa p{margin:0;padding:10px 14px 14px}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:.93rem;background:#fff}
+th{background:var(--acc);color:#fff;text-align:start;padding:8px 10px;font-weight:700;border:1px solid var(--acc)}
+td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even) td{background:#f6f8fc}
+figure.visual,figure.shot{margin:22px 0;padding:14px 14px 10px;background:#fff;border:1px solid var(--line);border-radius:10px;text-align:center}
+figure.visual svg{width:100%;height:auto;max-width:680px;display:block;margin:0 auto;overflow:visible}
+figure.shot img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:4px}
+figcaption{font-size:.82rem;color:var(--muted);margin-top:8px;font-style:italic}
+svg text{font-family:inherit}
+svg .n1{fill:var(--acc-soft);stroke:var(--acc);stroke-width:2}
+svg .n2{fill:var(--amber-soft);stroke:var(--amber);stroke-width:2}
+svg .n3{fill:var(--teal-soft);stroke:var(--teal);stroke-width:2}
+svg .n4{fill:var(--rose-soft);stroke:var(--rose);stroke-width:2}
+svg .n5{fill:var(--violet-soft);stroke:var(--violet);stroke-width:2}
+svg .n6{fill:var(--sky-soft);stroke:var(--sky);stroke-width:2}
+svg .n7{fill:var(--green-soft);stroke:var(--green);stroke-width:2}
+svg .n8{fill:#fff;stroke:var(--ink);stroke-width:2}
+svg .ln{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+svg .ar{fill:none;stroke:var(--rose);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+svg .dash{stroke-dasharray:7 6}
+svg .t{fill:var(--ink);font-size:14px;font-weight:500}svg .tb{font-weight:700}svg .tsm{fill:var(--muted);font-size:12px}svg .tl{font-size:18px;font-weight:800}svg .tm{text-anchor:middle}
+
+/* ===== DOCUMENT style: numbered headings like a Word file ===== */
+[data-style=doc] section.topic:not(.extras):not(.addendum)>h2::before{content:counter(sec) ". "}
+[data-style=doc] section.topic:not(.extras):not(.addendum)>h3::before{content:counter(sec) "." counter(sub) "  ";color:var(--muted);font-weight:600}
+[data-style=doc] .sheet h4{color:var(--ink)}
+
+/* ===== HANDWRITTEN style ===== */
+[data-style=hand]{--bg:#d9d3c6}
+[data-style=hand] body,[data-style=hand] .sheet{font-family:var(--hand)}
+[data-style=hand] .sheet{font-size:1.1rem;line-height:1.75;color:#23253a;background-color:#fffdf4;background-image:radial-gradient(circle,#bfc7de 1.1px,transparent 1.3px);background-size:24px 24px;border-radius:6px 20px 8px 18px;box-shadow:0 2px 0 #cfc7b3,0 22px 46px -22px rgba(60,45,20,.5)}
+[data-style=hand] .cover{border-bottom:0}
+[data-style=hand] .cover .kicker{font-family:var(--script);font-size:1.5rem;letter-spacing:.02em;text-transform:none;color:var(--rose)}
+[data-style=hand] .cover h1{font-family:var(--script);font-size:3.4rem;font-weight:700;color:var(--acc-ink);line-height:1.05;display:inline-block;background:linear-gradient(transparent 62%,var(--acc-soft) 62%,var(--acc-soft) 92%,transparent 92%);padding:0 .2em;margin-inline-start:-.2em}
+[data-style=hand] .meta,[data-style=hand] .legend span,[data-style=hand] .legend b,[data-style=hand] .ts{font-family:var(--hand);letter-spacing:0;text-transform:none}
+[data-style=hand] .legend span{border-inline-start:0;border:1.6px solid var(--b-l);border-radius:255px 12px 225px 12px/12px 225px 12px 255px;font-size:.85rem;padding:.3rem .65rem}
+[data-style=hand] .sheet h2{font-family:var(--script);font-size:2.3rem;font-weight:700;color:var(--acc-ink);display:inline-block;border-bottom:0;padding:0 .2rem;margin-bottom:10px;background:linear-gradient(transparent 64%,#ffe9a8 64%,#ffe9a8 90%,transparent 90%)}
+[data-style=hand] .sheet h3{font-family:var(--script);font-size:1.75rem;color:var(--rose);margin:18px 0 4px}
+[data-style=hand] .sheet h3::before{content:"✦ ";font-size:.8em}
+[data-style=hand] .sheet h4{font-family:var(--script);font-size:1.4rem;color:var(--teal);text-decoration:underline wavy;text-decoration-thickness:1.5px;text-underline-offset:4px}
+[data-style=hand] .sheet ul{list-style:none;padding-inline-start:1.4rem}
+[data-style=hand] .sheet ul>li{position:relative}
+[data-style=hand] .sheet ul>li::before{content:"➤";position:absolute;inset-inline-start:-1.3rem;color:var(--rose);font-size:.8em;top:.2em}
+[data-style=hand] .sheet ol>li::marker{font-family:var(--script);font-size:1.3em;color:var(--rose)}
+[data-style=hand] b.term{border-bottom:2.5px solid var(--acc)}
+[data-style=hand] mark.hl{background:linear-gradient(104deg,transparent .6%,#ffe45c 2.5%,#ffe45c 94%,transparent 99%);border-radius:.4em .9em .5em .8em;padding:.04em .3em}
+[data-style=hand] mark.hl2{background:linear-gradient(100deg,transparent .6%,#ffb3cc 2.5%,#ffb3cc 94%,transparent 99%);border-radius:.8em .4em .9em .5em;padding:.04em .3em}
+[data-style=hand] mark.hl3{background:linear-gradient(103deg,transparent .6%,#a8dcf7 2.5%,#a8dcf7 94%,transparent 99%);border-radius:.5em .9em .4em .8em;padding:.04em .3em}
+[data-style=hand] u.ul{text-decoration-style:wavy}
+[data-style=hand] .arr{font-family:var(--script);font-size:1.5em;line-height:.5}
+[data-style=hand] .ts{background:#fff4c2;border:1.2px dashed #c9a53a;color:#6b5a1b;font-size:.78rem}
+[data-style=hand] code{background:#fff0c9}
+[data-style=hand] .box{border-inline-start:0;border:2.6px solid var(--b);padding:22px 20px 14px;margin:28px 0 22px;border-radius:255px 18px 225px 18px/18px 225px 18px 255px;transform:rotate(-.3deg);box-shadow:3px 4px 0 rgba(0,0,0,.1)}
+[data-style=hand] .box:nth-of-type(even){transform:rotate(.3deg);border-radius:18px 255px 18px 225px/225px 18px 255px 18px}
+[data-style=hand] .box .label{position:absolute;top:-15px;inset-inline-start:18px;margin:0;background:var(--b);color:#fff;font-family:var(--script);font-size:1.15rem;font-weight:700;letter-spacing:0;text-transform:none;padding:4px 12px 3px;border-radius:10px 10px 10px 3px;transform:rotate(-1.6deg)}
+[data-style=hand] .flow .node{font-family:var(--hand);border:2.4px solid var(--acc);border-radius:255px 14px 225px 14px/14px 225px 14px 255px;box-shadow:2px 3px 0 var(--acc-soft)}
+[data-style=hand] .flow .link{font-family:var(--script);font-size:2.2rem}
+[data-style=hand] .cols .col{border:2.2px solid var(--ink);border-radius:255px 14px 225px 14px/14px 225px 14px 255px;box-shadow:3px 3px 0 rgba(0,0,0,.1)}
+[data-style=hand] .tl-when{font-family:var(--script);font-size:1.2rem;background:#ffe45c;color:#3a3000;transform:rotate(-1.2deg)}
+[data-style=hand] .timeline{border-inline-start:3px dashed var(--acc)}
+[data-style=hand] .aside{font-family:var(--script);font-size:1.3rem;line-height:1.25;background:#fff176;border:0;border-radius:2px;color:#4a3d00;transform:rotate(1.2deg);box-shadow:3px 5px 8px rgba(0,0,0,.2);max-width:80%;margin-inline:auto 0;padding:12px 16px}
+[data-style=hand] details.qa{border:2.2px dashed var(--acc);border-radius:16px 4px 16px 4px}
+[data-style=hand] table{border:2.4px solid var(--ink)}
+[data-style=hand] th{background:var(--acc-soft);color:var(--acc-ink);font-family:var(--script);font-size:1.3rem;border-color:var(--ink)}
+[data-style=hand] td{border-color:#b9bdd0}
+[data-style=hand] figure.visual,[data-style=hand] figure.shot{border:2.4px solid var(--ink);border-radius:255px 16px 225px 16px/16px 225px 16px 255px;padding:18px 18px 12px}
+[data-style=hand] figure.visual svg{filter:url(#rough)}
+[data-style=hand] figure.visual svg .t{font-family:var(--hand);font-size:15px;font-weight:600}
+[data-style=hand] figcaption{font-family:var(--script);font-style:normal;font-size:1.2rem;color:var(--rose)}
+
+/* ===== PDF export mode: fixed A4 width, no shadow ===== */
+.pdf body,.pdf{background:#fff!important}
+.pdf .sheet{width:794px;margin:0;box-shadow:none;padding:40px 64px 48px;border-radius:0}
+.pdf[data-style=hand] .sheet{border-radius:0}
+.pdf figure.visual svg{filter:none!important}
+`;
+
+/* =====================================================================
+   Margin: the note engine. Runs entirely in this page, using the viewer's
+   own Claude account (sample capability) and saving files (downloads).
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const CDN = {
+  pdfjs: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  pdfjsWorker: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+  zip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+  h2c: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+  jspdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+};
+const loaded = {};
+function loadScript(key) {
+  if (!loaded[key]) loaded[key] = new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = CDN[key]; s.onload = res;
+    s.onerror = () => { delete loaded[key]; rej(new Error('Could not load a helper library (' + key + '). Check your connection and try again.')); };
+    document.head.appendChild(s);
+  });
+  return loaded[key];
+}
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3800); }
+
+/* ---------------- languages ---------------- */
+const LANGS = {
+  en: ['English', 'en', 'ltr', 'Write the whole note in clear English.'],
+  bn: ['Bangla', 'bn', 'ltr', 'Write the whole note in Bangla (বাংলা), in simple natural student-friendly Bangla. Keep technical terms, formulas, symbols, code and proper names in their original English form; the first time a term appears write it as বাংলা শব্দ (English term) when a common Bangla word exists.'],
+  'bn-en': ['Bangla + English', 'bn', 'ltr', 'Write the note bilingually for a Bangladeshi student: headings in English with the Bangla in brackets; definitions and key points in English; every explanation, "explained simply" box and recap in simple Bangla (বাংলা). Keep technical terms in English.'],
+  hi: ['Hindi', 'hi', 'ltr', 'Write the whole note in Hindi (हिन्दी). Keep technical terms in English where students use them.'],
+  ur: ['Urdu', 'ur', 'rtl', 'Write the whole note in Urdu (اردو). Keep technical terms in English where students use them.'],
+  ar: ['Arabic', 'ar', 'rtl', 'Write the whole note in Arabic (العربية). Keep technical terms in English in brackets.'],
+  es: ['Spanish', 'es', 'ltr', 'Write the whole note in Spanish.'], fr: ['French', 'fr', 'ltr', 'Write the whole note in French.'],
+  de: ['German', 'de', 'ltr', 'Write the whole note in German.'], pt: ['Portuguese', 'pt', 'ltr', 'Write the whole note in Portuguese.'],
+  ru: ['Russian', 'ru', 'ltr', 'Write the whole note in Russian.'], tr: ['Turkish', 'tr', 'ltr', 'Write the whole note in Turkish.'],
+  id: ['Indonesian', 'id', 'ltr', 'Write the whole note in Indonesian.'], zh: ['Chinese', 'zh', 'ltr', 'Write the whole note in Simplified Chinese.'],
+  ja: ['Japanese', 'ja', 'ltr', 'Write the whole note in Japanese.'], ko: ['Korean', 'ko', 'ltr', 'Write the whole note in Korean.'],
+};
+function resolveLang(v, other) {
+  if (v === 'other') { const n = (other || 'English').trim() || 'English'; return { name: n, code: 'en', dir: 'ltr', instr: 'Write the whole note in ' + n + '. Keep technical terms in English in brackets when helpful.' }; }
+  const l = LANGS[v] || LANGS.en; return { name: l[0], code: l[1], dir: l[2], instr: l[3] };
+}
+
+/* ---------------- prompts ---------------- */
+const COMPONENTS = `
+STRUCTURE
+- Wrap every major topic in <section class="topic"> that begins with <h2> (plain heading text, an emoji is optional). Use <h3> for sub-topics and <h4> for small sub-points. Use <p>, <ul>/<ol>/<li>.
+- Prefer short, scannable bullet notes, but never at the cost of dropping information.
+
+TABLES (use them whenever the content is a comparison, a list of items with properties, classifications, steps with inputs/outputs, dates, formulas with variables, pros/cons, or any data in rows):
+  <table><thead><tr><th>…</th></tr></thead><tbody><tr><td>…</td></tr></tbody></table>
+
+INLINE MARKUP (use generously, like a student with highlighters)
+- <b class="term">key term</b> first appearance of each important term
+- <mark class="hl">…</mark> the single most important phrase/fact/number; <mark class="hl2">…</mark> contrast or secondary idea; <mark class="hl3">…</mark> names, dates, units, conditions
+- <u class="ul">…</u> something to remember / exam favourite
+- <span class="arr">→</span> arrows for cause → effect, leads to, becomes (also ⇒ ↑ ↓ ⇄)
+- <span class="ts">Slide 4</span> or <span class="ts">12:30</span> source reference chips (slide, page or class time)
+- <code>…</code> for code/commands; <sub>/<sup> for maths and chemistry
+
+CALL-OUT BOXES: <div class="box TYPE"><div class="label">Label</div> … </div>
+  TYPE = def (📘 Definition: every formal definition) · key (⭐ Key idea / rule) · ex (🧪 Example: every worked example, case study or story)
+         formula (🧮 Formula: formula + legend of every symbol and unit) · why (💡 Explained simply: plain-language explanation of a HARD idea with an everyday analogy)
+         warn (⚠️ Watch out: common mistakes, exceptions, exam traps, things the teacher stressed, announcements, deadlines) · tip (🧠 Memory trick: mnemonics and patterns)
+         recap (✅ Quick recap: 3-5 lines closing a big topic)
+  Write the label text in the note's language.
+
+DIAGRAM-LIKE BLOCKS
+- Simple flowchart / process / cause chain: <div class="flow"><div class="node">Step A</div><div class="link">→<small>because</small></div><div class="node">Step B</div></div>  (add class "vertical" for top-to-bottom)
+- Compare / contrast (2-3 columns): <div class="cols"><div class="col"><h4>A</h4><ul>…</ul></div><div class="col"><h4>B</h4><ul>…</ul></div></div>
+- Timeline / history / stages: <div class="timeline"><div class="tl-item"><span class="tl-when">1905</span><div>What happened</div></div></div>
+- Margin note / teacher comment: <div class="aside">✎ …</div>
+- Self-test question: <details class="qa"><summary>Question?</summary><p>Answer</p></details>
+
+ILLUSTRATIONS (inline SVG that you draw yourself)
+<figure class="visual"><svg viewBox="0 0 640 H" role="img" aria-label="…"> … </svg><figcaption>Fig. N: caption</figcaption></figure>
+- viewBox width is always 640, height 200-420. No width/height attributes, no <style>, no <script>, no external images, no inline colours.
+- Style ONLY with these classes: shapes (fill+outline) n1 accent · n2 amber · n3 teal · n4 rose · n5 violet · n6 sky · n7 green · n8 white;
+  lines: ln (ink line) · ar (rose arrow line, add marker-end="url(#ah)") · dash (dashed); text: t (normal) · tb (bold) · tsm (small grey) · tl (large) · tm (centred, text-anchor middle).
+- Draw real, meaningful diagrams: labelled parts of a system, cycles with arrows, graphs with axes and labelled curves, layer stacks, hierarchies and trees, circuits, number lines, Venn diagrams, and FLOWCHARTS with start/end rounded boxes, process rectangles, decision diamonds (<polygon>) with Yes/No branches and arrows.
+  Keep text inside shapes short, never overlapping, with 12px+ padding. Every label must be readable.
+`;
+
+function systemPrompt(lang, o) {
+  const visuals = o.visuals
+    ? 'For every major topic whose content is a process, algorithm, structure, cycle, relationship, comparison, graph or hierarchy, include a flowchart, diagram, table or comparison block. A table or flowchart that makes the topic clearer is better than extra prose. Aim for at least one visual element per topic.'
+    : 'Do NOT draw SVG figures. You may still use tables, flow, cols and timeline blocks where they clarify.';
+  const explain = o.explain
+    ? 'For every concept a beginner would find hard (abstract, mathematical, many steps, counter-intuitive) add a "why" box: plain words, an everyday analogy, then the logic step by step. Anything you add that is not in the source goes inside a why/tip/ex box, never mixed into factual bullets.'
+    : 'Do not add explanations beyond the source, except tiny clarifications of jargon.';
+  const examples = o.examples ? 'Where a formula or method has no worked example in the source, you may add one short, correct example in an ex box labelled as an extra example.' : 'Do not invent extra examples.';
+  const embed = o.embed
+    ? 'ORIGINAL PICTURES: each source unit header contains an id like U7. To show the original slide, page or photo inside the note, write <figure class="shot" data-src="U7"><figcaption>Slide 7: what it shows</figcaption></figure> (leave out the img tag; the page inserts it). Use this only where the original picture carries information that redrawing would lose (photos, real charts, complex figures, handwriting), at most about one per topic.'
+    : 'Do not embed original pictures.';
+  return `You are Margin, an elite note-maker: the brilliant, meticulous, creative student whose notes everyone photocopies before exams. You turn source material into ONE complete, beautifully organised, easy-to-study document.
+
+OUTPUT FORMAT
+Return ONLY an HTML fragment: no markdown, no code fences, no <html>/<head>/<body>, no <script>, no <style>, no style="" attributes, no commentary before or after. Use only the components listed below.
+
+PRIME DIRECTIVE: COMPLETENESS
+Every single piece of information in the source must appear in your note: every fact, definition, number, unit, name, date, formula, derivation step, example, exception, condition, caveat, list item, table row, figure/diagram content, code line, instruction, announcement, deadline and exam hint. Re-organise, condense wording and drop pure filler (greetings, "um", repetition) but NEVER drop information. When unsure whether something matters, keep it. If a slide shows a diagram or chart, redraw or describe it and capture its labels and values. If speech and slides overlap, merge them into one place and keep the extra detail from both.
+
+ORGANISATION
+Group by topic, in a logical teaching flow (what, why, how, example, pitfalls). Use a clear hierarchy (h2, h3, h4). End a long topic with a recap box. Put source chips (<span class="ts">) near facts so the student can find the original slide, page or time.
+
+${COMPONENTS}
+
+${visuals}
+${explain}
+${examples}
+${embed}
+
+FIDELITY
+Never invent facts presented as if they came from the source. If the source seems wrong or unclear, keep what it says and add a warn box noting the doubt. If something is unreadable, say so in a warn box instead of guessing.
+
+LANGUAGE
+${lang.instr}
+(HTML tags and class names always stay exactly as specified.)`;
+}
+const TRANSCRIPT_NOTE = 'The source is a spoken CLASS TRANSCRIPT, possibly with time stamps (automatic captions: fix obvious mishearings using context and keep names and terms consistent). Capture everything the teacher says that carries information: explanations, definitions, examples, analogies, stories that illustrate a point, student questions and answers, hints about what matters for exams, homework, announcements and deadlines (put those in a warn box). Remove only filler and repetition. Where time stamps exist, add chips like <span class="ts">12:30</span> next to major points.';
+const AUDIT_PROMPT = `You are a meticulous auditor checking a student's note for missing information. You receive SOURCE material and the NOTE (plain text) made from it. Find every substantive piece of information in the SOURCE that is absent from the NOTE: facts, definitions, numbers, names, dates, formulas, steps, examples, exceptions, conditions, list items, table rows, diagram/figure content, exam hints, announcements. Ignore rewording, filler, greetings, repetition, and anything present in different words.
+If nothing substantive is missing, reply with exactly: <NONE/>
+Otherwise output ONLY an HTML fragment with just the missing items, using the same components as the note, wrapped as: <section class="topic addendum"><h3>HEADING</h3> … </section> (HEADING means "More details from this part", written in the note's language). No commentary.`;
+const EXTRAS_PROMPT = `You are Margin, finishing a student's study document. From the finished NOTE text, create study extras in the note's language. Return ONLY an HTML fragment (same component rules as the note, no markdown, no scripts) with THREE sections:
+1. <section class="topic extras"><h2>Glossary</h2> a <table> with two columns (term | meaning) listing every key term, symbol and abbreviation in the note, alphabetical.</section>
+2. <section class="topic extras"><h2>One-page revision sheet</h2> the whole note compressed into the most essential points: key definitions, formulas (formula boxes), rules, processes (flow blocks or a table) and the top exam traps (warn box). About one printed page.</section>
+3. <section class="topic extras"><h2>Test yourself</h2> 8 to 15 varied self-test questions as <details class="qa"> blocks (recall, application, why, what would happen if), with short correct answers according to the note.</section>
+Headings must be in the note's language. Never invent facts that are not supported by the note.`;
+
+/* ---------------- sanitiser (model output is untrusted) ---------------- */
+const BAD_TAGS = 'script,iframe,frame,frameset,object,embed,link,meta,base,style,form,input,button,textarea,select,foreignObject,animate,animateMotion,animateTransform,set,use,image,audio,video,source,template,noscript';
+function sanitize(html) {
+  html = String(html || '').trim().replace(/^```(?:html)?\s*/i, '').replace(/\s*```$/, '');
+  const doc = new DOMParser().parseFromString('<body>' + html + '</body>', 'text/html');
+  doc.body.querySelectorAll(BAD_TAGS).forEach(n => n.remove());
+  doc.body.querySelectorAll('*').forEach(el => {
+    [...el.attributes].forEach(a => {
+      const n = a.name.toLowerCase();
+      if (n.startsWith('on') || n === 'style' || n === 'href' || n === 'xlink:href' || n === 'src' || n === 'srcdoc' || n === 'action' || n === 'formaction' || /javascript:/i.test(a.value)) el.removeAttribute(a.name);
+    });
+  });
+  return doc.body.innerHTML;
+}
+const stripTags = h => String(h).replace(/<svg[\s\S]*?<\/svg>/gi, ' [diagram] ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim();
+
+/* ---------------- local library (IndexedDB, with memory fallback) ---------------- */
+const mem = new Map(); let dbp = null;
+function idb() {
+  if (!dbp) dbp = new Promise(res => {
+    try {
+      const r = indexedDB.open('margin-notes', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('notes', { keyPath: 'id' });
+      r.onsuccess = () => res(r.result); r.onerror = () => res(null); r.onblocked = () => res(null);
+    } catch (e) { res(null); }
+  });
+  return dbp;
+}
+async function dbDo(mode, fn) {
+  const db = await idb(); if (!db) return null;
+  return new Promise(res => { try { const tx = db.transaction('notes', mode); const out = fn(tx.objectStore('notes')); tx.oncomplete = () => res(out && out.result !== undefined ? out.result : true); tx.onerror = () => res(null); } catch (e) { res(null); } });
+}
+async function saveNote(rec) { mem.set(rec.id, rec); await dbDo('readwrite', s => s.put(rec)); }
+async function allNotes() { const r = await dbDo('readonly', s => s.getAll()); const arr = r && r !== true ? r : [...mem.values()]; return arr.sort((a, b) => b.created - a.created); }
+async function delNote(id) { mem.delete(id); await dbDo('readwrite', s => s.delete(id)); }
+
+/* ---------------- state + form ---------------- */
+const S = { files: [], accent: 'blue', run: null, current: null };
+const fmtSize = n => n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+function renderFiles() {
+  const ul = $('#files'); ul.innerHTML = '';
+  S.files.forEach((f, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="ext"></span><span class="nm"></span><span class="sz"></span><button type="button" aria-label="Remove file">×</button>';
+    li.children[0].textContent = (f.name.split('.').pop() || '').slice(0, 4).toUpperCase();
+    li.children[1].textContent = f.name; li.children[2].textContent = fmtSize(f.size);
+    li.children[3].onclick = () => { S.files.splice(i, 1); renderFiles(); };
+    ul.appendChild(li);
+  });
+}
+function addFiles(list) {
+  [...list].forEach(f => { if (!S.files.find(x => x.name === f.name && x.size === f.size)) S.files.push(f); });
+  renderFiles();
+}
+const drop = $('#drop'), fileIn = $('#file');
+drop.onclick = () => fileIn.click();
+drop.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } };
+fileIn.onchange = () => { addFiles(fileIn.files); fileIn.value = ''; };
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+$('#lang').onchange = () => { $('#lang-other').hidden = $('#lang').value !== 'other'; };
+$('#sws').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; $$('#sws .sw').forEach(x => x.setAttribute('aria-pressed', x === b)); S.accent = b.dataset.a; });
+
+function showView(v) {
+  ['create', 'run', 'note', 'lib'].forEach(n => $('#v-' + n).hidden = n !== v);
+  $('#tab-create').setAttribute('aria-selected', v === 'create' || v === 'run');
+  $('#tab-lib').setAttribute('aria-selected', v === 'lib' || v === 'note');
+  window.scrollTo({ top: 0 });
+}
+$('#tab-create').onclick = () => showView(S.run && S.run.active ? 'run' : 'create');
+$('#home').onclick = () => showView(S.run && S.run.active ? 'run' : 'create');
+$('#tab-lib').onclick = () => { renderLib(); showView('lib'); };
+
+/* ---------------- readers ---------------- */
+async function shrinkToBlob(src, max = 1500, q = 0.82) {
+  const bmp = await createImageBitmap(src);
+  const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(bmp, 0, 0, c.width, c.height);
+  return new Promise(r => c.toBlob(r, 'image/jpeg', q));
+}
+async function readPdf(file, o, log, next) {
+  await loadScript('pdfjs');
+  if (!window.pdfjsLib) throw new Error('The PDF reader did not start.');
+  pdfjsLib.GlobalWorkerOptions.workerSrc = CDN.pdfjsWorker;
+  let pdf;
+  try { pdf = await pdfjsLib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise; }
+  catch (e) {
+    if (e && /password/i.test(e.name + e.message)) throw new Error('"' + file.name + '" is password protected. Remove the password and try again.');
+    throw new Error('Could not open "' + file.name + '" as a PDF (' + (e && e.message || e) + '). Try re-saving it as PDF, or paste its text into the transcript box.');
+  }
+  const units = [];
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const vp0 = page.getViewport({ scale: 1 });
+    const tc = await page.getTextContent();
+    let text = '', lastY = null;
+    for (const it of tc.items) {
+      if (typeof it.str !== 'string') continue;
+      const y = it.transform ? it.transform[5] : 0;
+      if (lastY !== null && Math.abs(y - lastY) > 3) text += '\n'; else if (text && !/[\s]$/.test(text)) text += ' ';
+      text += it.str; if (it.hasEOL) text += '\n'; lastY = y;
+    }
+    text = text.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+    const slide = vp0.width > vp0.height * 1.15;
+    let blob = null;
+    if (o.read && (slide || text.length < 450)) {
+      const sc = Math.min(2.2, 1500 / Math.max(vp0.width, vp0.height));
+      const vp = page.getViewport({ scale: sc });
+      const c = document.createElement('canvas'); c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+      await page.render({ canvasContext: x, viewport: vp }).promise;
+      blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.82));
+      c.width = c.height = 0;
+    }
+    units.push({ id: 'U' + next(), label: (slide ? 'Slide ' : 'Page ') + i, file: file.name, text, blob });
+    if (i % 5 === 0 || i === pdf.numPages) log('  ' + file.name + ': read ' + i + ' of ' + pdf.numPages);
+  }
+  return units;
+}
+const zipText = (xml, tag) => { const d = new DOMParser().parseFromString(xml, 'application/xml'); return [...d.getElementsByTagName(tag)].map(n => n.textContent).join(''); };
+async function readPptx(file, o, log, next) {
+  await loadScript('zip');
+  const z = await JSZip.loadAsync(await file.arrayBuffer());
+  const names = Object.keys(z.files).filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a, b) => parseInt(a.match(/\d+/)[0]) - parseInt(b.match(/\d+/)[0]));
+  const units = [];
+  for (const n of names) {
+    const num = parseInt(n.match(/\d+/)[0]);
+    const xml = await z.file(n).async('string');
+    const d = new DOMParser().parseFromString(xml, 'application/xml');
+    const paras = [...d.getElementsByTagName('a:p')].map(p => [...p.getElementsByTagName('a:t')].map(t => t.textContent).join('')).filter(t => t.trim());
+    let text = paras.join('\n');
+    const nf = z.file('ppt/notesSlides/notesSlide' + num + '.xml');
+    if (nf) { const nx = await nf.async('string'); const nd = new DOMParser().parseFromString(nx, 'application/xml'); const nt = [...nd.getElementsByTagName('a:p')].map(p => [...p.getElementsByTagName('a:t')].map(t => t.textContent).join('')).filter(t => t.trim() && !/^\d+$/.test(t.trim())).join('\n'); if (nt) text += '\n[Speaker notes: ' + nt + ']'; }
+    units.push({ id: 'U' + next(), label: 'Slide ' + num, file: file.name, text, blob: null });
+  }
+  log('  ' + file.name + ': ' + units.length + ' slides read (text only; export as PDF to include the pictures).');
+  return units;
+}
+async function readDocx(file, o, log, next) {
+  await loadScript('zip');
+  const z = await JSZip.loadAsync(await file.arrayBuffer());
+  const xml = await z.file('word/document.xml').async('string');
+  const d = new DOMParser().parseFromString(xml, 'application/xml');
+  const lines = [...d.getElementsByTagName('w:p')].map(p => {
+    const st = p.getElementsByTagName('w:pStyle')[0]; const h = st && /heading/i.test(st.getAttribute('w:val') || '');
+    const t = [...p.getElementsByTagName('w:t')].map(x => x.textContent).join('');
+    return t.trim() ? (h ? '## ' + t : t) : '';
+  }).filter(Boolean);
+  return splitText(file.name, lines.join('\n\n'), next);
+}
+function splitText(name, text, next, size = 6500) {
+  const paras = text.split(/\n{2,}/), out = []; let cur = '', n = 1;
+  for (const p of paras) { if (cur.length + p.length > size && cur) { out.push({ id: 'U' + next(), label: name + ' part ' + n, file: name, text: cur.trim(), blob: null }); cur = ''; n++; } cur += p + '\n\n'; }
+  if (cur.trim()) out.push({ id: 'U' + next(), label: name + ' part ' + n, file: name, text: cur.trim(), blob: null });
+  return out;
+}
+async function readFiles(files, o, log) {
+  let counter = 0; const next = () => ++counter; const units = [];
+  for (const f of files) {
+    const ext = (f.name.split('.').pop() || '').toLowerCase();
+    log('Reading ' + f.name + '…');
+    if (ext === 'pdf') units.push(...await readPdf(f, o, log, next));
+    else if (ext === 'pptx') units.push(...await readPptx(f, o, log, next));
+    else if (ext === 'docx') units.push(...await readDocx(f, o, log, next));
+    else if (['png', 'jpg', 'jpeg', 'webp'].includes(ext)) units.push({ id: 'U' + next(), label: 'Photo ' + f.name, file: f.name, text: '', blob: await shrinkToBlob(f) });
+    else if (['txt', 'md', 'csv'].includes(ext)) units.push(...splitText(f.name, await f.text(), next));
+    else throw new Error('"' + f.name + '" is not a supported file type. Use PDF, PowerPoint, Word, text or an image.');
+  }
+  return units;
+}
+
+/* ---------------- batching ---------------- */
+function batchUnits(units, maxUnits, maxChars, maxImgs) {
+  const out = []; let cur = [], ch = 0, im = 0;
+  for (const u of units) {
+    const c = u.text.length, i = u.blob ? 1 : 0;
+    if (cur.length && (cur.length >= maxUnits || ch + c > maxChars || im + i > maxImgs)) { out.push(cur); cur = []; ch = 0; im = 0; }
+    cur.push(u); ch += c; im += i;
+  }
+  if (cur.length) out.push(cur);
+  return out;
+}
+function chunkTranscript(text, max = 12000) {
+  const lines = text.replace(/\r/g, '').split('\n'); const out = []; let cur = '';
+  for (const ln of lines) { if (cur.length + ln.length > max && cur) { out.push(cur.trim()); cur = ''; } cur += ln + '\n'; }
+  if (cur.trim()) out.push(cur.trim());
+  return out;
+}
+const unitText = u => '\n=== ' + u.label + (u.file ? ' · ' + u.file : '') + ' · id=' + u.id + ' ===\n' + (u.text || '(no extractable text: read the picture)');
+
+/* ---------------- the engine ---------------- */
+const FATAL = new Set(['not_granted', 'sampling_disabled', 'not_declared', 'capability_disabled', 'capability_removed', 'session_expired', 'rate_limited']);
+const cap = async n => (window.claude && window.claude.use) ? window.claude.use(n) : null;
+let sampleFn = null;
+async function getSample() {
+  if (sampleFn) return sampleFn;
+  sampleFn = (window.claude && window.claude.use) ? await window.claude.use('sample') : null;
+  return sampleFn;
+}
+function errText(e) {
+  const c = e && e.code;
+  const m = { not_granted: 'You chose not to let this page use Claude. Allow it and try again.', sampling_disabled: 'Claude is not available for this account.', rate_limited: 'Claude usage limit reached for now. Wait a bit, then press Retry.', session_expired: 'Please sign in again, then retry.', refused: 'Claude declined this part of the material.', upstream_error: 'A temporary connection problem. Press Retry.', empty_completion: 'Claude returned nothing for this part. Press Retry.', prompt_too_large: 'This part was too large.', images_unavailable: 'This view cannot send pictures to Claude.', image_rejected: 'A picture was rejected (too large or unreadable).' };
+  return (m[c] || (e && e.message) || 'Unknown error') + (c ? ' [' + c + ']' : '');
+}
+const ACT = {};
+async function ask(prompt, blobs, signal, tier, tag) {
+  const sample = await getSample();
+  if (!sample) { const e = new Error('This page needs to be opened inside Claude (signed in) to write notes.'); e.code = 'not_granted'; throw e; }
+  const fast = S.run && S.run.o && S.run.o.fast;
+  const opts = { signal, cache: false, modelTier: tier || (fast ? 'quick' : 'default') };
+  if (blobs && blobs.length) opts.images = blobs;
+  const key = tag || 'task'; ACT[key] = { t0: Date.now(), chars: 0 };
+  opts.onText = ({ text }) => { if (ACT[key]) ACT[key].chars = text.length; };
+  try { return await sample(prompt, opts); } finally { delete ACT[key]; }
+}
+async function pool(items, n, fn) {
+  let i = 0; const workers = Array.from({ length: Math.min(n, items.length) }, async () => { while (i < items.length) { const k = i++; await fn(items[k], k); } });
+  await Promise.all(workers);
+}
+
+function setProg(frac, stage, msg) {
+  const r = S.run; if (!r) return;
+  r.frac = Math.max(r.frac || 0, Math.min(frac, 0.99));
+  $('#rfill').style.width = Math.round(r.frac * 100) + '%'; $('#rpct').textContent = Math.round(r.frac * 100) + '%';
+  if (msg) $('#rtitle').textContent = msg;
+  const order = ['read', 'write', 'extras', 'finish']; const idx = order.indexOf(stage);
+  $$('#stages li').forEach(li => { const k = order.indexOf(li.dataset.s); li.className = k < idx ? 'done' : k === idx ? 'on' : ''; });
+}
+function log(m) { const l = $('#log'); l.textContent += (l.textContent ? '\n' : '') + m; l.scrollTop = l.scrollHeight; }
+
+async function startRun(ev) {
+  ev.preventDefault();
+  const ferr = $('#ferr'); ferr.hidden = true;
+  const link = $('#link').value.trim(), tx = $('#tx').value.trim();
+  if (!S.files.length && !tx) {
+    ferr.textContent = link ? 'A link alone cannot be read from this page. Paste the class transcript (see "How do I get a transcript?") or add the slides.' : 'Add a file, or paste a class transcript.';
+    ferr.hidden = false; return;
+  }
+  const o = { audit: $('#o-audit').checked, visuals: $('#o-visuals').checked, explain: $('#o-explain').checked, examples: $('#o-examples').checked, embed: $('#o-embed').checked, extras: $('#o-extras').checked, read: $('#o-read').checked, fast: $('#o-fast').checked };
+  const lang = resolveLang($('#lang').value, $('#lang-other').value);
+  S.run = { active: true, o, lang, link, tx, files: [...S.files], title: $('#title').value.trim(), subject: $('#subject').value.trim(), style: $('input[name=style]:checked').value, accent: S.accent, frac: 0, ctl: new AbortController(), parts: null, units: null };
+  $('#log').textContent = ''; $('#rerr').hidden = true; $('#stop').hidden = false; $('#rfill').style.width = '2%'; $('#rpct').textContent = '0%';
+  showView('run'); setProg(0.01, 'read', 'Reading your material…');
+  await execute();
+}
+
+let tick = null;
+function startTick() {
+  clearInterval(tick);
+  tick = setInterval(() => {
+    const ks = Object.keys(ACT); const el = $('#rsub'); if (!el) return;
+    if (!ks.length) { el.textContent = ''; return; }
+    el.textContent = ks.map(k => { const a = ACT[k]; const sec = Math.round((Date.now() - a.t0) / 1000); return k + ': ' + (a.chars ? 'writing, ' + a.chars.toLocaleString() + ' characters' : 'Claude is thinking…') + ' (' + sec + 's)'; }).join('   ·   ');
+  }, 1000);
+}
+async function execute() {
+  const r = S.run; r.ctl = new AbortController(); const signal = r.ctl.signal; startTick();
+  $('#rerr').hidden = true; $('#stop').hidden = false;
+  try {
+    const sample = await getSample();
+    if (!sample) throw Object.assign(new Error('This page must be opened inside Claude, signed in, to write notes.'), { code: 'not_granted' });
+    // ---- 1. read sources (once)
+    if (!r.units) {
+      log('Reading your files…');
+      r.units = await readFiles(r.files, r.o, log);
+      const lim = await sample.limits().catch(() => null);
+      r.maxImgs = lim && lim.images ? Math.min(lim.images.maxCount || 0, 8) : 0;
+      if (!r.maxImgs) { r.units.forEach(u => { if (u.blob) { u.blob = null; } }); log('Note: this view cannot send pictures to Claude, so only the text of your files is used.'); }
+      const nImg = r.units.filter(u => u.blob).length;
+      log('Read ' + r.units.length + ' pages/slides' + (nImg ? ', ' + nImg + ' with pictures.' : '.'));
+      if (!r.units.length && !r.tx) throw new Error('I could not find anything readable in those files.');
+      if (r.units.every(u => !u.text.trim() && !u.blob) && !r.tx) throw new Error('These files have no readable text. Try a text-based PDF, or add photos of the pages.');
+    }
+    // ---- 2. plan parts (once)
+    if (!r.parts) {
+      const parts = [];
+      if (r.tx) {
+        const slidesRef = r.units.filter(u => u.text).map(u => '[' + u.label + ' id=' + u.id + '] ' + u.text).join('\n').slice(0, 60000);
+        const chunks = chunkTranscript(r.tx);
+        chunks.forEach(c => parts.push({ kind: 'class transcript', ref: TRANSCRIPT_NOTE + (slidesRef ? '\n\nThe class SLIDES text is given as reference below. Where the teacher is explaining a slide, merge slide content and speech into one place; keep every detail from both.\n\nSLIDES REFERENCE:\n' + slidesRef : ''), src: c, blobs: [] }));
+        r.slideBatches = slidesRef && r.o.audit ? batchUnits(r.units, 8, 14000, r.maxImgs || 0) : [];
+      } else {
+        batchUnits(r.units, 6, 11000, r.maxImgs || 0).forEach(b => parts.push({ kind: 'slides / document pages', ref: b.some(u => u.blob) ? 'Pages may come with a PICTURE: read diagrams, charts, tables, equations and handwriting from it as carefully as the text.' : '', src: b.map(unitText).join('\n'), blobs: b.filter(u => u.blob).map(u => u.blob) }));
+        r.slideBatches = [];
+      }
+      parts.forEach(p => { p.frag = null; p.audited = false; p.err = null; });
+      r.parts = parts; r.extrasDone = !r.o.extras; r.extrasHtml = ''; r.slideDone = new Array(r.slideBatches.length).fill(false); r.slideAdd = new Array(r.slideBatches.length).fill('');
+      r.total = parts.length * (r.o.audit ? 2 : 1) + r.slideBatches.length + (r.o.extras ? 1 : 0) + 1; r.done = 0;
+      log('Split into ' + parts.length + ' part' + (parts.length === 1 ? '' : 's') + ' so nothing is skipped.');
+    }
+    const sys = systemPrompt(r.lang, r.o);
+    const bump = (stage, msg) => { r.done++; setProg(0.05 + 0.9 * r.done / r.total, stage, msg); };
+    // ---- 3. write + audit each part
+    setProg(0.06 + 0.9 * r.done / r.total, 'write', 'Writing every topic…');
+    const n = r.parts.length; let failed = 0;
+    await pool(r.parts.map((p, i) => i), 2, async i => {
+      const p = r.parts[i]; if (signal.aborted) return;
+      try {
+        if (p.frag === null) {
+          const prompt = sys + '\n\n---\n' + (i === 0 ? 'This is the FIRST part: do not write a document title and no long introduction; start with the first topic.' : 'This is part ' + (i + 1) + ' of ' + n + '. Continue the same document seamlessly: no introduction, no title.') + ' ' + (i === n - 1 ? 'This is the LAST part.' : 'Do not write a conclusion for the whole document; more parts follow.') + '\nSource type: ' + p.kind + '.\n' + p.ref + '\n\nConvert ALL of the material below into note HTML. Cover everything.\n\nSOURCE:\n' + p.src;
+          const res = await ask(prompt, p.blobs, signal, null, 'part ' + (i + 1));
+          p.frag = sanitize(res.text);
+          if (res.truncated) log('Part ' + (i + 1) + ' was very long; the completeness check will recover anything cut off.');
+          bump('write', 'Written part ' + (i + 1) + ' of ' + n); log('Written part ' + (i + 1) + ' of ' + n);
+        }
+        if (r.o.audit && !p.audited) {
+          const ap = AUDIT_PROMPT + '\n\nLANGUAGE: ' + r.lang.instr + '\n\nCOMPONENT REFERENCE:\n' + COMPONENTS + '\n\nSOURCE:\n' + p.src + '\n\nNOTE (plain text):\n' + stripTags(p.frag).slice(0, 90000);
+          const res = await ask(ap, p.blobs, signal, null, 'check ' + (i + 1));
+          const add = sanitize(res.text);
+          p.add = /<NONE\s*\/?>/i.test(res.text) || add.length < 30 ? '' : add;
+          p.audited = true; if (p.add) log('Completeness check added missing details to part ' + (i + 1) + '.');
+          bump('write', 'Checked part ' + (i + 1) + ' of ' + n + ' for missing information');
+        }
+        p.err = null;
+      } catch (e) {
+        if (e && e.code === 'cancelled') return;
+        p.err = e; failed++; log('Part ' + (i + 1) + ' failed: ' + errText(e));
+        if (FATAL.has(e && e.code)) { r.fatal = r.fatal || e; r.ctl.abort(); }
+      }
+    });
+    if (r.fatal) { const fe = r.fatal; r.fatal = null; throw fe; }
+    if (signal.aborted) throw Object.assign(new Error('Stopped.'), { code: 'cancelled' });
+    if (r.parts.some(p => p.frag === null || (r.o.audit && !p.audited))) throw Object.assign(new Error(r.parts.filter(p => p.err).map(p => errText(p.err)).filter((v, i, a) => a.indexOf(v) === i).join(' ') || 'Some parts did not finish.'), { code: 'partial' });
+    // ---- 4. slides cross-check (when a class transcript was given with slides)
+    if (r.slideBatches.length) {
+      const body = r.parts.map(p => p.frag + (p.add || '')).join('\n');
+      for (let k = 0; k < r.slideBatches.length; k++) {
+        if (r.slideDone[k]) continue;
+        const b = r.slideBatches[k];
+        const ap = AUDIT_PROMPT + '\n\nLANGUAGE: ' + r.lang.instr + '\n\nCOMPONENT REFERENCE:\n' + COMPONENTS + '\n\nSOURCE (class slides):\n' + b.map(unitText).join('\n') + '\n\nNOTE (plain text):\n' + stripTags(body).slice(0, 120000);
+        const res = await ask(ap, b.filter(u => u.blob).map(u => u.blob), signal, null, 'slides ' + (k + 1));
+        const add = sanitize(res.text); r.slideAdd[k] = /<NONE\s*\/?>/i.test(res.text) || add.length < 30 ? '' : add; r.slideDone[k] = true;
+        if (r.slideAdd[k]) log('Added slide details the speech did not cover (slides batch ' + (k + 1) + ').');
+        bump('write', 'Cross-checked slides against the lecture (' + (k + 1) + '/' + r.slideBatches.length + ')');
+      }
+    }
+    // ---- 5. study extras
+    if (!r.extrasDone) {
+      setProg(0.05 + 0.9 * r.done / r.total, 'extras', 'Building glossary, revision sheet and self-test…');
+      const body = r.parts.map(p => p.frag + (p.add || '')).join('\n') + r.slideAdd.join('\n');
+      const res = await ask(EXTRAS_PROMPT + '\n\nLANGUAGE: ' + r.lang.instr + '\n\nCOMPONENT REFERENCE:\n' + COMPONENTS + '\n\nNOTE:\n' + stripTags(body).slice(0, 150000), [], signal, null, 'extras');
+      r.extrasHtml = sanitize(res.text); r.extrasDone = true; bump('extras', 'Study extras ready'); log('Study extras ready.');
+    }
+    // ---- 6. assemble
+    setProg(0.96, 'finish', 'Finishing the document…');
+    let body = r.parts.map(p => p.frag + (p.add || '')).join('\n') + '\n' + r.slideAdd.join('\n') + '\n' + r.extrasHtml;
+    body = await embedPictures(body, r.units);
+    const labels = await legendLabels(r.lang, signal);
+    const first = r.files[0] ? r.files[0].name.replace(/\.[^.]+$/, '') : 'Class notes';
+    const rec = {
+      id: 'n' + Date.now().toString(36), created: Date.now(), title: r.title || first, subject: r.subject, style: r.style, accent: r.accent,
+      lang: { name: r.lang.name, code: r.lang.code, dir: r.lang.dir },
+      source: [r.files.length ? r.files.length + ' file' + (r.files.length > 1 ? 's' : '') : '', r.tx ? 'Class transcript' : '', r.link ? hostOf(r.link) : ''].filter(Boolean).join(' + '),
+      date: new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }), body, labels,
+    };
+    await saveNote(rec); renderLib(); r.active = false; setProg(1, 'finish', 'Your note is ready');
+    $$('#stages li').forEach(li => li.className = 'done');
+    $('#stop').hidden = true; clearInterval(tick); $('#rsub').textContent = ''; toast('Your note is ready'); openNote(rec);
+  } catch (e) {
+    $('#stop').hidden = true; clearInterval(tick); $('#rsub').textContent = '';
+    if (e && e.code === 'cancelled') { r.active = false; $('#rtitle').textContent = 'Stopped'; log('Stopped.'); $('#rerr').hidden = false; $('#rerr-msg').textContent = 'You stopped the run. Work already finished is kept; Retry continues from there.'; return; }
+    $('#rtitle').textContent = 'Something went wrong';
+    $('#rerr').hidden = false; $('#rerr-msg').textContent = errText(e);
+    if (e && FATAL.has(e.code) && e.code !== 'rate_limited') $('#retry').hidden = true; else $('#retry').hidden = false;
+    log('Error: ' + errText(e));
+  }
+}
+const hostOf = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return 'Class link'; } };
+const LEGEND = { contents: 'Contents', legend: 'How to read this note', def: 'Definition', key: 'Key idea', ex: 'Example', formula: 'Formula', why: 'Explained simply', warn: 'Watch out', tip: 'Memory trick' };
+async function legendLabels(lang, signal) {
+  if (lang.name === 'English') return { ...LEGEND };
+  try {
+    const sample = await getSample();
+    const data = await sample.json('Translate these UI labels into ' + lang.name + '. Reply with ONLY a JSON object with the same keys.\n' + JSON.stringify(LEGEND), { modelTier: 'quick', signal, cache: false });
+    const out = {}; Object.keys(LEGEND).forEach(k => out[k] = String(data[k] || LEGEND[k])); return out;
+  } catch (e) { return { ...LEGEND }; }
+}
+async function embedPictures(body, units) {
+  const map = new Map(units.filter(u => u.blob).map(u => [u.id, u]));
+  const ids = [...new Set([...body.matchAll(/data-src="(U\d+)"/g)].map(m => m[1]))];
+  const urls = {};
+  for (const id of ids) {
+    const u = map.get(id); if (!u) continue;
+    try { const b = await shrinkToBlob(u.blob, 1000, 0.74); urls[id] = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b); }); } catch (e) { /* skip */ }
+  }
+  const doc = new DOMParser().parseFromString('<body>' + body + '</body>', 'text/html');
+  doc.querySelectorAll('figure.shot').forEach(f => {
+    const id = f.getAttribute('data-src');
+    if (id && urls[id]) { const img = doc.createElement('img'); img.setAttribute('src', urls[id]); img.setAttribute('alt', (f.textContent || 'Original').trim().slice(0, 120)); f.insertBefore(img, f.firstChild); f.removeAttribute('data-src'); }
+    else f.remove();
+  });
+  return doc.body.innerHTML;
+}
+$('#form').addEventListener('submit', startRun);
+$('#stop').onclick = () => S.run && S.run.ctl.abort();
+$('#retry').onclick = () => { if (S.run) { S.run.active = true; execute(); } };
+$('#back').onclick = () => { if (S.run) S.run.active = false; showView('create'); };
+
+/* ---------------- document builder + viewer ---------------- */
+const FONTS = 'https://fonts.googleapis.com/css2?family=Carlito:wght@400;700&family=Kalam:wght@400;700&family=Caveat:wght@500;700&family=Atma:wght@400;600;700&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap';
+function noteDoc(rec, o = {}) {
+  const style = o.style || rec.style, accent = o.accent || rec.accent, L = rec.labels || LEGEND;
+  const chips = [rec.source, rec.lang.name, rec.date].filter(Boolean).map(c => '<span>' + esc(c) + '</span>').join('');
+  const zoom = o.size ? ' style="font-size:' + o.size + 'px"' : '';
+  return '<!doctype html><html lang="' + esc(rec.lang.code) + '" dir="' + esc(rec.lang.dir) + '" data-style="' + esc(style) + '" data-accent="' + esc(accent) + '" class="' + (o.pdf ? 'pdf' : '') + '"' + zoom + '><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(rec.title) + '</title><link rel="stylesheet" href="' + FONTS + '"><style>' + NOTE_CSS + '</style></head><body>' +
+    '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 L3 5 Z" fill="#d1304f"/></marker><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter></defs></svg>' +
+    '<main class="sheet"><header class="cover"><div class="kicker">' + esc(rec.subject || 'Study note') + '</div><h1>' + esc(rec.title) + '</h1><div class="meta">' + chips + '</div>' +
+    '<div class="legend"><b>' + esc(L.legend) + '</b><span class="l-def">📘 ' + esc(L.def) + '</span><span class="l-key">⭐ ' + esc(L.key) + '</span><span class="l-ex">🧪 ' + esc(L.ex) + '</span><span class="l-formula">🧮 ' + esc(L.formula) + '</span><span class="l-why">💡 ' + esc(L.why) + '</span><span class="l-warn">⚠️ ' + esc(L.warn) + '</span><span class="l-tip">🧠 ' + esc(L.tip) + '</span></div></header>' +
+    rec.body + '</main></body></html>';
+}
+let view = { style: 'doc', accent: 'blue', size: 16 };
+function paintViewer() {
+  $('#st-doc').setAttribute('aria-pressed', view.style === 'doc'); $('#st-hand').setAttribute('aria-pressed', view.style === 'hand');
+  $$('#nsws .sw').forEach(b => b.setAttribute('aria-pressed', b.dataset.a === view.accent));
+}
+function openNote(rec) {
+  S.current = rec; view = { style: rec.style, accent: rec.accent, size: 16 };
+  $('#n-title').textContent = rec.title; $('#nstatus').textContent = '';
+  $('#frame').srcdoc = noteDoc(rec, view); paintViewer(); showView('note'); paintPdfBtn(); schedulePdf(1200);
+}
+function applyView() {
+  paintViewer(); const rec = S.current; if (!rec) return;
+  rec.style = view.style; rec.accent = view.accent; saveNote(rec); schedulePdf(1500);
+  try { const d = $('#frame').contentDocument.documentElement; d.setAttribute('data-style', view.style); d.setAttribute('data-accent', view.accent); d.style.fontSize = view.size + 'px'; }
+  catch (e) { $('#frame').srcdoc = noteDoc(rec, view); }
+}
+$('#st-doc').onclick = () => { view.style = 'doc'; applyView(); };
+$('#st-hand').onclick = () => { view.style = 'hand'; applyView(); };
+$('#nsws').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; view.accent = b.dataset.a; applyView(); });
+$('#zoom-in').onclick = () => { view.size = Math.min(24, view.size + 1); applyView(); };
+$('#zoom-out').onclick = () => { view.size = Math.max(12, view.size - 1); applyView(); };
+$('#n-back').onclick = () => { renderLib(); showView('lib'); };
+const safeName = t => (t || 'note').replace(/[^\p{L}\p{N} _-]+/gu, '').trim().slice(0, 80) || 'note';
+
+$('#dl-html').onclick = async () => {
+  const dl = await cap('downloads'); const rec = S.current;
+  if (!dl) { toast('Saving files is not available in this view.'); return; }
+  try { await dl.save({ filename: safeName(rec.title) + '.html', data: noteDoc(rec, { ...view, size: 0 }) }); toast('Saved'); } catch (e) { if (e && e.code !== 'declined') toast('Could not save: ' + (e.message || e.code)); }
+};
+
+/* ---------------- PDF: built automatically whenever a note opens ---------------- */
+const PDF = { key: null, blob: null, err: null, p: null };
+const pdfKey = () => S.current.id + '|' + view.style + '|' + view.accent;
+function paintPdfBtn() {
+  const bt = $('#dl-pdf'); bt.disabled = false;
+  bt.textContent = PDF.blob ? '⬇ Download PDF' : PDF.p ? 'Preparing PDF…' : PDF.err ? '⬇ Retry PDF' : '⬇ Download PDF';
+}
+async function buildPdf(rec, style, accent, say) {
+  say('Creating the PDF…');
+  await Promise.all([loadScript('h2c'), loadScript('jspdf')]);
+  const f = document.createElement('iframe'); f.setAttribute('sandbox', 'allow-same-origin'); f.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;height:1200px;border:0';
+  document.body.appendChild(f);
+  try {
+    await new Promise(res => { f.onload = res; f.srcdoc = noteDoc(rec, { style, accent, pdf: true }); });
+    const doc = f.contentDocument;
+    try { await Promise.race([doc.fonts.ready, sleep(6000)]); } catch (e) { }
+    await Promise.all([...doc.images].map(im => im.complete ? 1 : new Promise(r => { im.onload = im.onerror = r; })));
+    doc.querySelectorAll('details').forEach(d => d.open = true);
+    await sleep(300);
+    const sheet = doc.querySelector('.sheet'), H = Math.ceil(sheet.scrollHeight), top0 = sheet.getBoundingClientRect().top;
+    const PH = 1030; // px of content per A4 page at 794px width
+    const cands = [...sheet.querySelectorAll(':scope > header, :scope > section > *')].map(el => { const r = el.getBoundingClientRect(); return { top: r.top - top0, bottom: r.bottom - top0, h: r.height, head: /^H[1-6]$/.test(el.tagName) }; });
+    const pages = []; let s = 0;
+    while (s < H - 2) {
+      let e = Math.min(s + PH, H);
+      if (e < H) for (const c of cands) {
+        if (c.top > s + 120 && c.top < e && c.bottom > e && c.h < PH * 0.92) e = Math.min(e, c.top);
+        if (c.head && c.top > s + 120 && c.bottom <= s + PH && c.bottom > s + PH - 70) e = Math.min(e, c.top);
+      }
+      pages.push([s, e]); s = e;
+    }
+    const { jsPDF } = window.jspdf; const pdf = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+    for (let i = 0; i < pages.length; i++) {
+      say('Creating the PDF: page ' + (i + 1) + ' of ' + pages.length + '…');
+      const [a, b] = pages[i];
+      const cv = await window.html2canvas(sheet, { scale: 2, backgroundColor: '#ffffff', x: 0, y: a, width: 794, height: b - a, windowWidth: 794, windowHeight: H, logging: false, useCORS: true });
+      if (i) pdf.addPage();
+      pdf.addImage(cv.toDataURL('image/jpeg', 0.9), 'JPEG', 0, 12, 210, (b - a) * 210 / 794);
+      pdf.setFontSize(8); pdf.setTextColor(120); pdf.text((i + 1) + ' / ' + pages.length, 105, 291, { align: 'center' });
+      cv.width = cv.height = 0; await sleep(0);
+    }
+    PDF.pages = pages.length;
+    return pdf.output('blob');
+  } finally { f.remove(); }
+}
+function ensurePdf() {
+  const k = pdfKey();
+  if (PDF.key === k && (PDF.blob || PDF.p)) return PDF.p || Promise.resolve(PDF.blob);
+  PDF.key = k; PDF.blob = null; PDF.err = null;
+  const say = m => { if (PDF.key === k) $('#nstatus').textContent = m; };
+  PDF.p = buildPdf(S.current, view.style, view.accent, say).then(blob => {
+    if (PDF.key === k) { PDF.blob = blob; PDF.p = null; say('PDF ready (' + PDF.pages + ' pages). Press Download PDF.'); paintPdfBtn(); }
+    return blob;
+  }).catch(e => {
+    if (PDF.key === k) { PDF.err = e; PDF.p = null; say('The PDF could not be created (' + (e && (e.message || e.code) || e) + '). Press Retry PDF, or use HTML and print it to PDF from your browser.'); paintPdfBtn(); }
+    throw e;
+  });
+  paintPdfBtn(); return PDF.p;
+}
+let pdfTimer;
+function schedulePdf(delay) { clearTimeout(pdfTimer); pdfTimer = setTimeout(() => { if (S.current) ensurePdf().catch(() => { }); }, delay); }
+$('#dl-pdf').onclick = async () => {
+  const rec = S.current, dl = await cap('downloads');
+  if (!dl) { toast('Saving files is not available in this view.'); return; }
+  try {
+    const blob = (PDF.key === pdfKey() && PDF.blob) ? PDF.blob : await ensurePdf();
+    await dl.save({ filename: safeName(rec.title) + '.pdf', data: blob }); toast('PDF saved');
+  } catch (e) { if (!(e && e.code === 'declined')) $('#nstatus').textContent = 'Could not save the PDF: ' + (e && (e.message || e.code) || e); }
+};
+
+/* ---------------- library ---------------- */
+async function renderLib() {
+  const notes = await allNotes(); $('#libn').textContent = notes.length;
+  $('#subjects').innerHTML = [...new Set(notes.map(n => n.subject).filter(Boolean))].map(s => '<option value="' + esc(s) + '">').join('');
+  const box = $('#lib'); box.innerHTML = ''; $('#lib-empty').hidden = notes.length > 0;
+  notes.forEach(n => {
+    const d = document.createElement('article'); d.className = 'nc';
+    d.innerHTML = '<span class="tag"></span><h3></h3><div class="m"></div><div class="b"><button class="go" style="padding:.45rem .9rem;font-size:.85rem" data-a="open">Open</button><button class="ghost" data-a="del">Delete</button></div>';
+    d.querySelector('.tag').textContent = n.subject || 'Note'; d.querySelector('h3').textContent = n.title;
+    d.querySelector('.m').textContent = [n.style === 'hand' ? 'Handwritten' : 'Document', n.lang.name, n.date].join(' · ');
+    d.querySelector('[data-a=open]').onclick = () => openNote(n);
+    const del = d.querySelector('[data-a=del]'); let armed = false;
+    del.onclick = async () => { if (!armed) { armed = true; del.textContent = 'Click again to delete'; setTimeout(() => { armed = false; del.textContent = 'Delete'; }, 3000); return; } await delNote(n.id); renderLib(); };
+    box.appendChild(d);
+  });
+}
+renderLib();
+
+/* ---------------- connection check (also asks the consent question early) ---------------- */
+async function checkConn(test) {
+  const pill = $('#pill'), span = pill.querySelector('span');
+  pill.className = 'pill'; span.textContent = 'Checking…';
+  const sample = await getSample();
+  if (!sample) { pill.className = 'pill bad'; span.textContent = 'Open inside Claude to enable AI'; return false; }
+  if (!test) { pill.className = 'pill ok'; span.textContent = 'Claude available · click to test'; return true; }
+  try {
+    span.textContent = 'Testing…';
+    const r = await sample('Reply with exactly the word: OK', { modelTier: 'quick', cache: false });
+    pill.className = 'pill ok'; span.textContent = 'Claude connected'; toast('Claude replied: ' + r.text.trim().slice(0, 40)); return true;
+  } catch (e) { pill.className = 'pill bad'; span.textContent = errText(e).slice(0, 60); return false; }
+}
+$('#pill').onclick = () => checkConn(true);
+checkConn(false);
+
+</script>
+
+</body></html>
